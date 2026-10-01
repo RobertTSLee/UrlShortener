@@ -59,7 +59,7 @@ namespace UrlShortener.Migrations
                     b.Property<DateTime>("TimeStamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 14, 15, 529, DateTimeKind.Utc).AddTicks(1870));
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
@@ -91,7 +91,7 @@ namespace UrlShortener.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 14, 15, 520, DateTimeKind.Utc).AddTicks(2821));
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
                     b.Property<int>("HitCount")
                         .ValueGeneratedOnAdd()
@@ -127,7 +127,7 @@ namespace UrlShortener.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 14, 15, 524, DateTimeKind.Utc).AddTicks(2524));
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -161,7 +161,7 @@ namespace UrlShortener.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 14, 15, 524, DateTimeKind.Utc).AddTicks(3798));
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
                     b.Property<int>("UrlId")
                         .HasColumnType("integer");

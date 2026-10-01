@@ -66,7 +66,7 @@ public class UrlShortenerContext : DbContext
 
         modelBuilder.Entity<Url>()
             .Property(u => u.CreatedDate)
-            .HasDefaultValue(DateTime.UtcNow);
+            .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
         modelBuilder.Entity<Url>()
             .Property(u => u.HitCount)
@@ -86,7 +86,7 @@ public class UrlShortenerContext : DbContext
 
         modelBuilder.Entity<User>()
             .Property(u => u.CreatedDate)
-            .HasDefaultValue(DateTime.UtcNow);
+            .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
         // Configure UserUrlMapping entity
         modelBuilder.Entity<UserUrlMapping>()
@@ -94,7 +94,7 @@ public class UrlShortenerContext : DbContext
 
         modelBuilder.Entity<UserUrlMapping>()
             .Property(m => m.CreatedDate)
-            .HasDefaultValue(DateTime.UtcNow);
+            .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
         // Configure relationships
         modelBuilder.Entity<UserUrlMapping>()
@@ -131,6 +131,6 @@ public class UrlShortenerContext : DbContext
 
         modelBuilder.Entity<Log>()
             .Property(l => l.TimeStamp)
-            .HasDefaultValue(DateTime.UtcNow);
+            .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
     }
 }

@@ -3,6 +3,8 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.PostgreSQL;
 using UrlShortener.Data;
+using UrlShortener.Helper;
+using UrlShortener.Service;
 
 // Get connection string early for Serilog PostgreSQL sink
 var configBuilder = new ConfigurationBuilder()
@@ -38,24 +40,51 @@ try
     // Add Serilog to the logging pipeline
     builder.Host.UseSerilog();
 
-    // Add services to the container.
-
     // Configure Entity Framework Core with PostgreSQL
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
         ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     builder.Services.AddDbContext<UrlShortenerContext>(options =>
         options.UseNpgsql(connectionString));
 
+    // Add services to the container.
+    builder.Services.AddTransient<IGuidGenerator, GuidGenerator>();
+    builder.Services.AddTransient<IUrlConverter, Base64GuidConverter>();
+    //builder.Services.AddTransient<IUrlConverter, Base64UrlConverter>();  // example of swapping IUrlConverter implementation
+    builder.Services.AddScoped<IUrlService, UrlService>();
+
     builder.Services.AddControllers();
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
     builder.Services.AddOpenApi();
 
+    // Add CORS policy to allow Swagger UI to access the API
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("LocalHost", policy =>
+        {
+            // local test purpose
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+    });
+
     var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
+    // setup swagger and OpenAPI only in development environment
     if (app.Environment.IsDevelopment())
     {
+        // Enable CORS for development
+        app.UseCors("LocalHost");
+
+        // 2. Map the native OpenAPI JSON endpoint (Generates /openapi/v1.json)
         app.MapOpenApi();
+
+        // 3. Serve the interactive Swagger UI
+        app.UseSwaggerUI(options =>
+        {
+            // Point to the .NET 10 native OpenAPI document route
+            options.SwaggerEndpoint("/openapi/v1.json", "API v1");
+        });
     }
 
     app.UseHttpsRedirection();
