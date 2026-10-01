@@ -22,6 +22,64 @@ namespace UrlShortener.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("UrlShortener.Model.Log", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Exception")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MessageTemplate")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RequestId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("SourceContext")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 14, 15, 529, DateTimeKind.Utc).AddTicks(1870));
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Level");
+
+                    b.HasIndex("RequestId");
+
+                    b.HasIndex("SourceContext");
+
+                    b.HasIndex("TimeStamp")
+                        .IsDescending();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Logs");
+                });
+
             modelBuilder.Entity("UrlShortener.Model.Url", b =>
                 {
                     b.Property<int>("Id")
@@ -33,7 +91,7 @@ namespace UrlShortener.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 6, 54, 42, 401, DateTimeKind.Utc).AddTicks(5740));
+                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 14, 15, 520, DateTimeKind.Utc).AddTicks(2821));
 
                     b.Property<int>("HitCount")
                         .ValueGeneratedOnAdd()
@@ -69,7 +127,7 @@ namespace UrlShortener.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 6, 54, 42, 405, DateTimeKind.Utc).AddTicks(2102));
+                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 14, 15, 524, DateTimeKind.Utc).AddTicks(2524));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -103,7 +161,7 @@ namespace UrlShortener.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 6, 54, 42, 405, DateTimeKind.Utc).AddTicks(3597));
+                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 14, 15, 524, DateTimeKind.Utc).AddTicks(3798));
 
                     b.Property<int>("UrlId")
                         .HasColumnType("integer");

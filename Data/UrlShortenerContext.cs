@@ -37,6 +37,11 @@ public class UrlShortenerContext : DbContext
     public DbSet<UserUrlMapping> UserUrlMappings { get; set; }
 
     /// <summary>
+    /// Gets or sets the collection of log entries persisted for audit and debugging.
+    /// </summary>
+    public DbSet<Log> Logs { get; set; }
+
+    /// <summary>
     /// Configures the model and relationships using the Fluent API.
     /// </summary>
     /// <param name="modelBuilder">The model builder for entity configuration.</param>
@@ -103,5 +108,29 @@ public class UrlShortenerContext : DbContext
             .WithMany(u => u.UserMappings)
             .HasForeignKey(m => m.UrlId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Configure Log entity
+        modelBuilder.Entity<Log>()
+            .HasKey(l => l.Id);
+
+        modelBuilder.Entity<Log>()
+            .HasIndex(l => l.TimeStamp)
+            .IsDescending();
+
+        modelBuilder.Entity<Log>()
+            .HasIndex(l => l.Level);
+
+        modelBuilder.Entity<Log>()
+            .HasIndex(l => l.SourceContext);
+
+        modelBuilder.Entity<Log>()
+            .HasIndex(l => l.RequestId);
+
+        modelBuilder.Entity<Log>()
+            .HasIndex(l => l.UserId);
+
+        modelBuilder.Entity<Log>()
+            .Property(l => l.TimeStamp)
+            .HasDefaultValue(DateTime.UtcNow);
     }
 }
