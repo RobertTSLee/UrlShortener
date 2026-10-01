@@ -46,11 +46,20 @@ try
     builder.Services.AddDbContext<UrlShortenerContext>(options =>
         options.UseNpgsql(connectionString));
 
+    // Register channel for background processing of URL ingestion
+    builder.Services.AddSingleton<IUrlChannel, UrlChannel>();
+    builder.Services.AddHostedService<UrlIngestor>();
+
     // Add services to the container.
     builder.Services.AddTransient<IGuidGenerator, GuidGenerator>();
+
+    // example of swapping IUrlConverter implementation
     builder.Services.AddTransient<IUrlConverter, Base64GuidConverter>();
-    //builder.Services.AddTransient<IUrlConverter, Base64UrlConverter>();  // example of swapping IUrlConverter implementation
-    builder.Services.AddScoped<IUrlService, UrlService>();
+    //builder.Services.AddTransient<IUrlConverter, Base64UrlConverter>();  
+
+    // Register UrlService as a scoped service, example of swapping implementation of IUrlService
+    //builder.Services.AddScoped<IUrlService, UrlService>();
+    builder.Services.AddScoped<IUrlService, UrlHighConcurrentService>();
 
     builder.Services.AddControllers();
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

@@ -44,4 +44,12 @@ public class UrlShorthenController(
 
         return Results.Redirect(url.LongUrl, permanent: false);
     }
+
+    //[HttpPost(Name = "ShortenUrlOffLoad")]
+    //public async ValueTask<IResult> ShortenUrlOffLoad([FromBody] string longUrl, CancellationToken ct)
+    //{
+    //    var url = await service.ShortenUrlAsync(longUrl);
+
+    //    return Results.Redirect(url.LongUrl, permanent: false);
+    //}
 }
