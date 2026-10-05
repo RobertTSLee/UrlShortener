@@ -54,12 +54,13 @@ try
     builder.Services.AddTransient<IGuidGenerator, GuidGenerator>();
 
     // example of swapping IUrlConverter implementation
-    builder.Services.AddTransient<IUrlConverter, Base64GuidConverter>();
+    builder.Services.AddTransient<IUrlConverter, Base62GuidConverter>();
+    //builder.Services.AddTransient<IUrlConverter, Base64GuidConverter>();
     //builder.Services.AddTransient<IUrlConverter, Base64UrlConverter>();  
 
     // Register UrlService as a scoped service, example of swapping implementation of IUrlService
-    //builder.Services.AddScoped<IUrlService, UrlService>();
-    builder.Services.AddScoped<IUrlService, UrlHighConcurrentService>();
+    builder.Services.AddScoped<IUrlService, UrlService>();
+    //builder.Services.AddScoped<IUrlService, UrlHighConcurrentService>();
 
     builder.Services.AddControllers();
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

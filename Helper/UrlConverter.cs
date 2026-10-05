@@ -56,3 +56,36 @@ public class Base64GuidConverter : IUrlConverter
             .Replace('/', '_');
     }
 }
+
+// Base62GuidConverter encodes a Guid into a Base62 string (maximum 10 characters).
+// Converts the GUID bytes to a large unsigned integer and encodes it using Base62 alphabet.
+public class Base62GuidConverter : IUrlConverter
+{
+    private readonly string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    // todo: move this to ENV or appsettings
+    private const int MaxLength = 10;
+
+    public string Encode<T>(T input)
+    {
+        if (input is not Guid guid)
+            throw new ArgumentException($"Expected Guid, got {typeof(T).Name}", nameof(input));
+
+        // Convert GUID bytes to a large unsigned long (using first 8 bytes)
+        // This gives us a 64-bit unsigned integer representation
+        var guidBytes = guid.ToByteArray();
+        ulong number = BitConverter.ToUInt64(guidBytes, 0);
+
+        if (number == 0) return Alphabet[0].ToString();
+
+        var result = new StringBuilder();
+        while (number > 0)
+        {
+            result.Insert(0, Alphabet[(int)(number % 62)]);
+            number /= 62;
+        }
+
+        // Return maximum 10 characters
+        var encoded = result.ToString();
+        return encoded.Length > MaxLength ? encoded.Substring(encoded.Length - MaxLength) : encoded;
+    }
+}
