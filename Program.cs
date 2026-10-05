@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using StackExchange.Redis;
+
 using UrlShortener.Data;
 using UrlShortener.Helper;
 using UrlShortener.Service;
@@ -45,6 +47,14 @@ try
         options
             .UseNpgsql(connectionString)
             .UseSnakeCaseNamingConvention());
+
+    // register Redis connection multiplexer
+    // Register StackExchange.Redis Connection Multiplexer
+    builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+    {
+        var configuration = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+        return ConnectionMultiplexer.Connect(configuration);
+    });
 
     // Register channel for background processing of URL ingestion
     builder.Services.AddSingleton<IUrlChannel, UrlChannel>();

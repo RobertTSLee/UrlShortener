@@ -80,3 +80,16 @@ Or using Docker:
 ```powershell
 docker exec -it postgres16 psql -U postgres -d urlshortener -c "SELECT version();"
 ```
+
+
+## Redis Local Setup
+
+Start Redis local, auto pull latest image
+```powershell
+docker run --name redis-local -p 6379:6379 -d redis
+```
+
+Verify connection
+```powershell
+docker exec -it redis-local redis-cli ping
+```
