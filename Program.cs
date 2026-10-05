@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Serilog.Events;
-using Serilog.Sinks.PostgreSQL;
 using UrlShortener.Data;
 using UrlShortener.Helper;
 using UrlShortener.Service;
@@ -44,7 +42,9 @@ try
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
         ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     builder.Services.AddDbContext<UrlShortenerContext>(options =>
-        options.UseNpgsql(connectionString));
+        options
+            .UseNpgsql(connectionString)
+            .UseSnakeCaseNamingConvention());
 
     // Register channel for background processing of URL ingestion
     builder.Services.AddSingleton<IUrlChannel, UrlChannel>();

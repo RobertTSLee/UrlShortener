@@ -12,8 +12,8 @@ using UrlShortener.Data;
 namespace UrlShortener.Migrations
 {
     [DbContext(typeof(UrlShortenerContext))]
-    [Migration("20261001071101_AddLoggingTable")]
-    partial class AddLoggingTable
+    [Migration("20261005105345_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,156 +29,193 @@ namespace UrlShortener.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Exception")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("exception");
 
                     b.Property<string>("Level")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("level");
 
                     b.Property<string>("Message")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("message");
 
                     b.Property<string>("MessageTemplate")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("message_template");
 
                     b.Property<string>("Properties")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("properties");
 
                     b.Property<string>("RequestId")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("request_id");
 
                     b.Property<string>("SourceContext")
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("source_context");
 
                     b.Property<DateTime>("TimeStamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 11, 1, 128, DateTimeKind.Utc).AddTicks(1980));
+                        .HasColumnName("time_stamp")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
                     b.Property<int?>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_logs");
 
-                    b.HasIndex("Level");
+                    b.HasIndex("Level")
+                        .HasDatabaseName("ix_logs_level");
 
-                    b.HasIndex("RequestId");
+                    b.HasIndex("RequestId")
+                        .HasDatabaseName("ix_logs_request_id");
 
-                    b.HasIndex("SourceContext");
+                    b.HasIndex("SourceContext")
+                        .HasDatabaseName("ix_logs_source_context");
 
                     b.HasIndex("TimeStamp")
-                        .IsDescending();
+                        .IsDescending()
+                        .HasDatabaseName("ix_logs_time_stamp");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_logs_user_id");
 
-                    b.ToTable("Logs");
+                    b.ToTable("logs", (string)null);
                 });
 
             modelBuilder.Entity("UrlShortener.Model.Url", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 11, 1, 118, DateTimeKind.Utc).AddTicks(4997));
+                        .HasColumnName("created_date")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
                     b.Property<int>("HitCount")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                        .HasDefaultValue(0)
+                        .HasColumnName("hit_count");
 
                     b.Property<string>("LongUrl")
                         .IsRequired()
                         .HasMaxLength(2048)
-                        .HasColumnType("character varying(2048)");
+                        .HasColumnType("character varying(2048)")
+                        .HasColumnName("long_url");
 
                     b.Property<string>("ShortUrl")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("short_url");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_urls");
 
                     b.HasIndex("ShortUrl")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_urls_short_url");
 
-                    b.ToTable("Urls");
+                    b.ToTable("urls", (string)null);
                 });
 
             modelBuilder.Entity("UrlShortener.Model.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
 
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 11, 1, 122, DateTimeKind.Utc).AddTicks(6251));
+                        .HasColumnName("created_date")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("email");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("user_name");
 
-                    b.HasKey("UserId");
+                    b.HasKey("UserId")
+                        .HasName("pk_users");
 
                     b.HasIndex("Email")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_email");
 
                     b.HasIndex("UserName")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_user_name");
 
-                    b.ToTable("Users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("UrlShortener.Model.UserUrlMapping", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2026, 10, 1, 7, 11, 1, 122, DateTimeKind.Utc).AddTicks(7694));
+                        .HasColumnName("created_date")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
                     b.Property<int>("UrlId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("url_id");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_user_url_mappings");
 
-                    b.HasIndex("UrlId");
+                    b.HasIndex("UrlId")
+                        .HasDatabaseName("ix_user_url_mappings_url_id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_user_url_mappings_user_id");
 
-                    b.ToTable("UserUrlMappings");
+                    b.ToTable("user_url_mappings", (string)null);
                 });
 
             modelBuilder.Entity("UrlShortener.Model.UserUrlMapping", b =>
@@ -187,13 +224,15 @@ namespace UrlShortener.Migrations
                         .WithMany("UserMappings")
                         .HasForeignKey("UrlId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_user_url_mappings_urls_url_id");
 
                     b.HasOne("UrlShortener.Model.User", "User")
                         .WithMany("UrlMappings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_user_url_mappings_users_user_id");
 
                     b.Navigation("Url");
 
