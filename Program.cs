@@ -55,6 +55,7 @@ try
         var configuration = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
         return ConnectionMultiplexer.Connect(configuration);
     });
+    builder.Services.AddScoped<ICacheService, CacheService>();
 
     // Register channel for background processing of URL ingestion
     builder.Services.AddSingleton<IUrlChannel, UrlChannel>();

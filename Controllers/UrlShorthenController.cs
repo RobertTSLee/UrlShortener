@@ -38,18 +38,21 @@ public class UrlShorthenController(
     }
 
     [HttpPost(Name = "ShortenUrl")]
-    public async ValueTask<IResult> ShortenUrl([FromBody] string longUrl, CancellationToken ct)
+    public async ValueTask<IActionResult> ShortenUrl([FromBody] string longUrl, CancellationToken ct)
     {
-        var url = await service.ShortenUrlAsync(longUrl);
+        //var url = await service.ShortenUrlAsync(longUrl);
 
-        return Results.Redirect(url.LongUrl, permanent: false);
-    }
-
-    [HttpPost(Name = "ShortenUrlNoRedirect")]
-    public async ValueTask<IActionResult> ShortenUrlOffLoad([FromBody] string longUrl, CancellationToken ct)
-    {
+        //return Results.Redirect(url.LongUrl, permanent: false);
         var url = await service.ShortenUrlAsync(longUrl);
 
         return Ok(url);
     }
+
+    //[HttpPost(Name = "ShortenUrlNoRedirect")]
+    //public async ValueTask<IActionResult> ShortenUrlOffLoad([FromBody] string longUrl, CancellationToken ct)
+    //{
+    //    var url = await service.ShortenUrlAsync(longUrl);
+
+    //    return Ok(url);
+    //}
 }

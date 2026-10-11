@@ -13,21 +13,39 @@ public interface IUrlConverter
 // or, get from distributed unique ID generator like Snowflake or ULID, and convert to Base62 for short URL representation.
 public class Base62UrlConverter : IUrlConverter
 {
-    private readonly string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private const string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static readonly int BaseLength = Alphabet.Length;
+    private const int MaxCodeLength = 6;    // this will get 62**6 combinations
+    private static readonly long MaxValidId = (long)Math.Pow(BaseLength, MaxCodeLength);
+
     public string Encode<T>(T input)
     {
         if (input is not long number)
-            throw new ArgumentException($"Expected long, got {typeof(T).Name}", nameof(input));
-
-        if (number == 0) return Alphabet[0].ToString();
-
-        var result = new StringBuilder();
-        while (number > 0)
         {
-            result.Insert(0, Alphabet[(int)(number % 62)]);
-            number /= 62;
+            throw new ArgumentException($"Expected long, got {typeof(T).Name}", nameof(input));
         }
-        return result.ToString();
+
+        if (number < 0 || number > MaxValidId)
+        {
+            throw new ArgumentOutOfRangeException($"Value must be between 0 and {MaxValidId}");
+        }
+
+        if (number == 0) 
+        { 
+            return Alphabet[0].ToString(); 
+        }
+
+        // pad first char to at least MaxCodeLength characthers
+        var buffer = new char[MaxCodeLength];
+        for (int i = MaxCodeLength - 1; i >= 0; i--)
+        {
+            var charIdx = (int)(number % BaseLength);
+            buffer[i] = Alphabet[charIdx];
+
+            number /= BaseLength;
+        }
+
+        return new string(buffer);
     }
 }
 
