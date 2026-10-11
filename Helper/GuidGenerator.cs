@@ -1,8 +1,15 @@
-﻿namespace UrlShortener.Helper;
+﻿using StackExchange.Redis;
+
+namespace UrlShortener.Helper;
 
 public interface IGuidGenerator
 {
     Guid GenerateUniqueId();   
+}
+
+public interface IGuidGeneratorAsync
+{
+    Task<Guid> GenerateUniqueId();
 }
 
 public class GuidGenerator : IGuidGenerator
@@ -16,6 +23,3 @@ public class GuidGenerator : IGuidGenerator
         return Guid.CreateVersion7();
     }
 }
-
-// implement other classes for different GUID generation strategies if needed, e.g., time-based, random, etc.
-// TODO: implement distributed unique ID generator like Snowflake or ULID
